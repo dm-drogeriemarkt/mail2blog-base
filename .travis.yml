@@ -1,0 +1,33 @@
+language: java
+cache:
+  directories:
+  - "~/.m2/repository"
+install:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:
+- mvn test -P !build-extras -Dmaven.javadoc.skip=true -B
+- mvn cobertura:cobertura
+deploy:
+- provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: a3C4FbuQ2UeZo3AxnjcdPJ2joY1hJlxfAZBBJ/eb2m3X2XSJCki8n+UNqaGMkepYaDGhXYAKYNqZx9Dpjh+Mc10g/5Bo4BHWGCsOkr5VJL5SkHc+cMtYq0XLhGHzfmBIvNS5LS/hrRknQF2dO7CCJczujZx/ZTs4txIYTQp6zOtRXKwfbNuuSQDC6e1W+w409wI/dddARFuWJ2bGxQ+S4YvzwC9hlmwPp9u/RdI6a1QZCvvext5wT+hTRNvBn+q6ncfvniDhwngfjCWAiRu0ARJOEKo8mBBGrr5wYw4azJgVp0cLms1tOo7kdzkAxyroz7WUBX9zC7HnrtNmNrgyolAmVe0t5j6VHryLLAzqaSbcTPilJAB7OWw9vYFV3HJR2//SxHigsPkXdyFBVXNVy6WwZLYeykSlevxTiszwNhY3E0Iz/t/YeFafRMPcoZNWOdMVSHq5gZRavLP7GvOJVQCieyD+13g2roTLjYjDr1Nvn/fagWZqekJejyHQ5xNOTIM2Py5bXuv7Ro2kqmvzCJxK1tizOWuFqPq4NWgyVOxuaNGnHkRUYN4v08S65e5x6a38H5Un+wX7bA9cWhG8C3V1asJkygYP2D68LmFMZAve76BYOS83kaX7VJKLVKkP0eOUXOQdeMK0BeedwJf9FJkU5vpSPHNYzZfJgZ48uVA=
+  file_glob: true
+  file: target/base-*.jar
+  on:
+    branch: master
+    repo: gellweiler/mail2blog-base
+    tags: true
+- provider: script
+  script: cd/deploy.sh
+  on:
+    branch: master
+    condition: "$TRAVIS_PULL_REQUEST == 'false'"
+    tags: true
+after_success:
+- bash <(curl -s https://codecov.io/bash)
+env:
+  global:
+  - OSSRH_JIRA_USERNAME=mail2blog
+  - GPG_KEY_NAME=mail2blog.dmDeutschland@dm.de
+  - secure: c09AEnJ2Ai3HVJm/dK42SA9fiS9Msqb0yQz+TxF2hru+LEluxGZvKaSiYKq40eH2cOqq+Re1PrNzZhx0uHciCgAae/3+9caz4UotpuZu+VHPSj2CeCj4Ksr7Vmc520AuBYBh1CwpQE/d6SGQNDkmQqvK73EHmCvuMXj5CAx0bsvWNvwKaTOuPMDoK4g3laqT4QF//ZbClCmjLtqnKVA2SF+LexuBXTBpx2eTjuHrAG6+w41KDefnBd2NFpXJU7TvH90LvLXyjFXdDpIaKZ93umDcPvpBgCYd9ufXs/NldauXupzo0ArGiUoya2BmPpq5UIckihJZ3grGiFr0nn+cz+gHp21j57CPGLT9fhMTXqtO96sj/VHaisxSPKocn8h69E44oV6F5MdJ5l9UU6lHPYYQJpIwjaa1XoDm8vJFBlFL6WIpKpcmGMkqfLGV2q6YPvmJrNN1HTjfJlzb1MDnkOMqIR9SpgeFbUrWtF75XaPtlvTiklSOGlTlsAifb+dxCx0PkkVdqcCb0rk4GdhV9RImGeel6xzTLW0a7xEXELglrFyGYu4M48ezo5LeW0uOqEiD24JUaaL1N4NarHIwbvH9dfR6BLHoJS33RT67/nHjvdZjf2HZy9F7JZ4Xv8Ci3q1mtM4ZXSu6GiHAZ5GGpp2Im6HObnrLwzcwfReiaXo=
