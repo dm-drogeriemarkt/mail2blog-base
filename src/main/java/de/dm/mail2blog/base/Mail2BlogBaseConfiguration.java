@@ -23,6 +23,18 @@ public class Mail2BlogBaseConfiguration {
 
     @Getter @NonNull private FileTypeBucket fileTypeBucket;
 
+    // The rules to use to filter HTML in mails.
+    // The plugin uses the owasp.html framework to filter html.
+    // We store them as boolean flags to be compatible with xstream/bandana storage
+    // and to set/get them easily from velocity templates.
+    // Using an ArrayList as storage proofed to be too troublesome.
+    // Use getHtmlFilter() to get a policyFactory.
+    @Getter @NonNull private boolean htmlFilterFormatting;
+    @Getter @NonNull private boolean htmlFilterBlocks;
+    @Getter @NonNull private boolean htmlFilterImages;
+    @Getter @NonNull private boolean htmlFilterLinks;
+    @Getter @NonNull private boolean htmlFilterStyles;
+    @Getter @NonNull private boolean htmlFilterTables;
 
     // Builder class with default values.
     public static class Mail2BlogBaseConfigurationBuilder
@@ -34,5 +46,12 @@ public class Mail2BlogBaseConfiguration {
         private long maxAllowedAttachmentSizeInBytes = 1024 * 1024 * 100; // 100mb
         private int maxAllowedNumberOfAttachments = -1;
         private FileTypeBucket fileTypeBucket = FileTypeBucket.defaultBucket();
+
+        private boolean htmlFilterFormatting = true;
+        private boolean htmlFilterBlocks = true;
+        private boolean htmlFilterImages = true;
+        private boolean htmlFilterLinks = true;
+        private boolean htmlFilterStyles = true;
+        private boolean htmlFilterTables = true;
     }
 }

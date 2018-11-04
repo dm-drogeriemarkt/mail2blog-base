@@ -5,7 +5,7 @@ cache:
 install:
 - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:
-- mvn test -P !build-extras -Dmaven.javadoc.skip=true -B
+- mvn package -B
 - mvn cobertura:cobertura
 deploy:
 - provider: releases
