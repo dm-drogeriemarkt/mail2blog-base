@@ -1,10 +1,6 @@
 package ut.dm.de.mail2blog_base;
 
-import de.dm.mail2blog.base.ISpaceKeyValidator;
-import de.dm.mail2blog.base.Mail2BlogBaseConfiguration;
-import de.dm.mail2blog.base.SpaceExtractor;
-import de.dm.mail2blog.base.SpaceInfo;
-import de.dm.mail2blog.base.SpaceRule;
+import de.dm.mail2blog.base.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

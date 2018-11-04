@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 @RunWith(MockitoJUnitRunner.class)
 public class FileTypeBucketTest
 {
-
     /**
      * Check that testing for mime type works.
      */

@@ -2,7 +2,7 @@ package de.dm.mail2blog.base;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * Stores the allowed mime types and file extensions and supports serializing/deserializing to tab seperated CSV
  * to store the values in BANDANA and to display them in the admin UI.
  */
-@Log4j
+@Slf4j
 public class FileTypeBucket {
 
     // Map that maps mimeType to file extensions.
