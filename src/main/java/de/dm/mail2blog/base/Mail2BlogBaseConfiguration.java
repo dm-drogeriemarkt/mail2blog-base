@@ -15,7 +15,7 @@ public class Mail2BlogBaseConfiguration {
     @Getter @NonNull private String[] preferredContentTypes;
 
     // The maximum allowed size for an attachment.
-    @Getter private int maxAllowedAttachmentSizeInBytes;
+    @Getter private long maxAllowedAttachmentSizeInBytes;
 
     // The maximum allowed number of attachments.
     // If set to -1 the number isn't limited.
@@ -31,7 +31,7 @@ public class Mail2BlogBaseConfiguration {
         private SpaceRule[] spaceRules = new SpaceRule[]{};
         private String defaultContentType = ContentTypes.BlogPost;
         private String[] preferredContentTypes = new String[]{"text/html", "application/xhtml+xml", "text/plain"};
-        private int maxAllowedAttachmentSizeInBytes = 1024 * 1024 * 100; // 100mb
+        private long maxAllowedAttachmentSizeInBytes = 1024 * 1024 * 100; // 100mb
         private int maxAllowedNumberOfAttachments = -1;
         private FileTypeBucket fileTypeBucket = FileTypeBucket.defaultBucket();
     }
