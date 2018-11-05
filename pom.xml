@@ -6,7 +6,7 @@
 
     <groupId>de.dm.mail2blog</groupId>
     <artifactId>base</artifactId>
-    <version>2.1.5</version>
+    <version>2.1.6</version>
     <packaging>jar</packaging>
 
     <name>Email to Confluence (base library)</name>
@@ -19,9 +19,9 @@
     </organization>
 
     <scm>
-        <url>https://github.com/gellweiler/mail2blog-base</url>
-        <connection>scm:git:git://github.com/gellweiler/mail2blog-base.git</connection>
-        <developerConnection>scm:git:git@github.com/gellweiler/mail2blog-base.git</developerConnection>
+        <url>https://github.com/dm-drogeriemarkt/mail2blog-base</url>
+        <connection>scm:git:git://github.com/dm-drogeriemarkt/mail2blog-base.git</connection>
+        <developerConnection>scm:git:git@github.com/dm-drogeriemarkt/mail2blog-base.git</developerConnection>
     </scm>
 
     <developers>

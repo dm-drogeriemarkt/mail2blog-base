@@ -7,8 +7,8 @@ Contains the code to convert emails to confluence markup that is independent of 
 
 Hosted on [Maven Central](https://search.maven.org/search?q=g:de.dm.mail2blog%20AND%20a:base&core=gav)
 
-[![Build Status](https://travis-ci.org/gellweiler/mail2blog-base.svg?branch=master)](https://travis-ci.org/gellweiler/mail2blog-base)
-[![Unit Test Coverage](https://img.shields.io/codecov/c/github/gellweiler/mail2blog-base.svg)](https://codecov.io/gh/gellweiler/mail2blog-base)
+[![Build Status](https://travis-ci.org/dm-drogeriemarkt/mail2blog-base.svg?branch=master)](https://travis-ci.org/dm-drogeriemarkt/mail2blog-base)
+[![Unit Test Coverage](https://img.shields.io/codecov/c/github/dm-drogeriemarkt/mail2blog-base.svg)](https://codecov.io/gh/dm-drogeriemarkt/mail2blog-base)
 
 ## License
 Original work Copyright (c) 2008, Liip AG
