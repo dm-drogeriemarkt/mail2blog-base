@@ -20,6 +20,7 @@ public final class HtmlSanitizers {
     public static final PolicyFactory TABLES = Sanitizers.TABLES.and(
         new HtmlPolicyBuilder()
         .allowElements(new String[]{
+            "caption",
             "table",
             "tr",
             "td",
@@ -48,6 +49,7 @@ public final class HtmlSanitizers {
             "bgcolor",
             "char",
             "charoff",
+            "span",
         }).onElements(new String[]{
             "table",
             "tr",

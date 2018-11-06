@@ -1,4 +1,4 @@
-package ut.dm.de.mail2blog_base;
+package ut.de.dm.mail2blog.base;
 
 import de.dm.mail2blog.base.*;
 import org.junit.Before;

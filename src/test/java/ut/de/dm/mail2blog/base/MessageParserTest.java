@@ -1,4 +1,4 @@
-package ut.dm.de.mail2blog_base;
+package ut.de.dm.mail2blog.base;
 
 import de.dm.mail2blog.base.FileTypeBucket;
 import de.dm.mail2blog.base.Mail2BlogBaseConfiguration;
@@ -13,8 +13,10 @@ import javax.mail.Message;
 import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.List;
 
+import static java.lang.Math.abs;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -70,18 +72,26 @@ public class MessageParserTest {
 
         assertEquals("Expected two parts in mail", 2, content.size());
 
-        // Get html and attachment.
+        // Get html and attachments.
         MailPartData htmlPart = content.get(0);
-        MailPartData attachment = content.get(1);
+        MailPartData attachment1 = content.get(1);
+        MailPartData attachment2 = content.get(1);
 
         assertEquals("Wrong mimeType for html part", "text/html", htmlPart.getContentType());
         assertTrue("Could not find <p>Lieber Bob,</p> in html", htmlPart.getHtml().contains("<p>Lieber Bob,</p>"));
 
-        assertEquals("Wrong content-id for attachment", "<6FA75120-9E1A-45DE-9001-620110B831AD>", attachment.getContentID());
-        assertEquals("Wrong mimeType for attachment", "image/gif", attachment.getContentType());
-        assertEquals("Wrong filename for attachement", "dm-logo.gif", attachment.getAttachementData().getFilename());
-        assertEquals("Wrong media type for attachement", "image/gif", attachment.getAttachementData().getMediaType());
-        assertEquals("Wrong file size for attachement", 2155, attachment.getAttachementData().getFileSize());
+        assertEquals("Wrong content-id for attachment", "<6FA75120-9E1A-45DE-9001-620110B831AD>", attachment1.getContentID());
+        assertEquals("Wrong mimeType for attachment", "image/gif", attachment1.getContentType());
+        assertEquals("Wrong filename for attachement", "dm-logo.gif", attachment1.getAttachementData().getFilename());
+        assertEquals("Wrong media type for attachement", "image/gif", attachment1.getAttachementData().getMediaType());
+        assertEquals("Wrong file size for attachement", 2155, attachment1.getAttachementData().getFileSize());
+        long creation_diff = abs(attachment1.getAttachementData().getCreationDate().getTime() - (new Date()).getTime());
+        assertTrue("Creation date of by more than two seconds", creation_diff <= 2000);
+        long modification_diff = abs(attachment1.getAttachementData().getLastModificationDate().getTime() - (new Date()).getTime());
+        assertTrue("Modification date of by more than two seconds", modification_diff <= 2000);
+
+        assertTrue("No content id generated for attachment", attachment2.getContentID().length() > 0);
+        assertTrue("No filename generated for attachment", attachment2.getAttachementData().getFilename().length() > 0);
     }
 
     /**
@@ -167,10 +177,10 @@ public class MessageParserTest {
     }
 
     /**
-     * Test getting the user from a mail message.
+     * Test getting the Sender E-Mail from a mail message.
      */
     @Test
-    public void testGetUser() throws Exception {
+    public void testGetSender() throws Exception {
         Mail2BlogBaseConfiguration mail2BlogBaseConfiguration = Mail2BlogBaseConfiguration.builder().build();
 
         MessageParser messageParser = new MessageParser(exampleMessage, mail2BlogBaseConfiguration);

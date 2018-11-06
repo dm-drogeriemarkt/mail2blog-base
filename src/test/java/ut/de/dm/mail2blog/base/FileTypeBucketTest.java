@@ -1,4 +1,4 @@
-package ut.de.dm.mail2blog;
+package ut.de.dm.mail2blog.base;
 
 import de.dm.mail2blog.base.FileTypeBucket;
 import de.dm.mail2blog.base.FileTypeBucketException;
