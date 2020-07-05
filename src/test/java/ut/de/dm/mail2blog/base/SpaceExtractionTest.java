@@ -62,12 +62,13 @@ public class SpaceExtractionTest {
             new String[]{ "cc",      "start",    "alice@",               "copy",     "grenoble",  },
             new String[]{ "to/cc",   "end",      "@example.org",         "copy",     "lyon",      },
             new String[]{ "subject", "regexp",   "[0-9]+",               "copy",     "bordeaux",  },
+            new String[]{ "subject", "regexp",   "([0-9])+",             "copy",     SpaceRuleSpaces.CapturingGroup0, },
         };
 
         Object[][] messages = new Object[][]{
             //            From,                TO,                CC,                  Subject,    Spaces
             new Object[]{ "alice@example.org", "info@shop.de",    "alice@example.com", "test123",  new String[]{ "marseille", "paris" } },
-            new Object[]{ "alice@example.org", "bob@example.org", "alice@example.org", "test123",  new String[]{ "marseille", "grenoble", "lyon", "bordeaux", "defaultSpace" } },
+            new Object[]{ "alice@example.org", "bob@example.org", "alice@example.org", "test123",  new String[]{ "marseille", "grenoble", "lyon", "bordeaux", "123", "defaultSpace" } },
         };
 
         SpaceRule[] spaceRules = new SpaceRule[table.length];
