@@ -9,9 +9,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -117,5 +120,48 @@ public class SpaceExtractionTest {
             new InternetAddress("bob+paris@example.org"),
         };
         Message message = mock(Message.class);
+    }
+
+    /**
+     * Make sure that an inperformant regexp can't crash the entire application.
+     */
+    @Test
+    public void testLongRunningRegexp() throws Exception {
+        String testString = String.join("", Collections.nCopies(1000, "x")); // x repeated 1000 times
+        String regexp = "(x+x+)+y";
+
+        SpaceRule spaceRule = SpaceRule.builder()
+            .field("subject")
+            .operator("regexp")
+            .value(regexp)
+            .action("copy")
+            .space(SpaceRuleSpaces.CapturingGroup0)
+            .build();
+
+        Message message = mock(Message.class);
+        when(message.getSubject()).thenReturn(testString);
+
+        Mail2BlogBaseConfiguration mail2BlogBaseConfiguration
+            = Mail2BlogBaseConfiguration.builder().spaceRules(new SpaceRule[]{spaceRule}).build();
+
+        boolean caughtException = false;
+        try {
+            spaceExtractor.extractSpaceKey(spaceRule, testString);
+        } catch (Exception e) {
+            caughtException = true;
+            assertTrue(e.getCause() instanceof TimeoutException);
+        }
+        assertTrue(caughtException);
+
+        caughtException = false;
+        try {
+            spaceExtractor.evalCondition(spaceRule, testString);
+        } catch (Exception e) {
+            caughtException = true;
+            assertTrue(e.getCause() instanceof TimeoutException);
+        }
+        assertTrue(caughtException);
+
+        List<SpaceInfo> spaceInfos = spaceExtractor.getSpaces(mail2BlogBaseConfiguration, message);
     }
 }

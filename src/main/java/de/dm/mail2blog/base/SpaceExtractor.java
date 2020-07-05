@@ -1,6 +1,8 @@
 package de.dm.mail2blog.base;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.util.concurrent.SimpleTimeLimiter;
+import com.google.common.util.concurrent.TimeLimiter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -148,7 +151,7 @@ public class SpaceExtractor {
      * @return
      *  True if the condition is fulfilled, false if not.
      */
-    private boolean evalCondition(SpaceRule rule, String value) {
+    public boolean evalCondition(SpaceRule rule, String value) throws Exception {
         if (SpaceRuleOperators.Is.equals(rule.getOperator())) {
             return StringUtils.equalsIgnoreCase(value, rule.getValue());
         } else if (SpaceRuleOperators.Contains.equals(rule.getOperator())) {
@@ -158,8 +161,15 @@ public class SpaceExtractor {
         } else if (SpaceRuleOperators.EndsWith.equals(rule.getOperator())) {
             return StringUtils.endsWithIgnoreCase(value, rule.getValue());
         } else if (SpaceRuleOperators.Regexp.equals(rule.getOperator())) {
-            Pattern pattern = Pattern.compile(rule.getValue(), Pattern.CASE_INSENSITIVE);
-            return pattern.matcher(value).find();
+            try {
+                TimeLimiter timeLimiter = SimpleTimeLimiter.create(Executors.newSingleThreadExecutor());
+                return timeLimiter.callWithTimeout(() -> {
+                    Pattern pattern = Pattern.compile(rule.getValue(), Pattern.CASE_INSENSITIVE);
+                    return pattern.matcher(new InterruptibleCharSequence(value)).find();
+                }, 100, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                throw new Exception("failed to evaluate regexp in space rules", e);
+            }
         }
 
         return false;
@@ -170,26 +180,33 @@ public class SpaceExtractor {
      *
      * Usually this is just rule.space, but for regexps the space key can be extracted from value.
      */
-    private String extractSpaceKey(SpaceRule rule, String value) throws Exception {
+    public String extractSpaceKey(SpaceRule rule, String value) throws Exception {
         // Extract space key with regexp.
         if (
             SpaceRuleOperators.Regexp.equals(rule.getOperator()) &&
             (SpaceRuleSpaces.CapturingGroup0.equals(rule.getSpace()) || SpaceRuleSpaces.CapturingGroup1.equals(rule.getSpace()))
         ) {
-            Pattern pattern = Pattern.compile(rule.getValue(), Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(value);
+            try {
+                TimeLimiter timeLimiter = SimpleTimeLimiter.create(Executors.newSingleThreadExecutor());
+                return timeLimiter.callWithTimeout(() -> {
+                    Pattern pattern = Pattern.compile(rule.getValue(), Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(new InterruptibleCharSequence(value));
 
-            if (!matcher.find()) {
-                throw new Exception("regexp did not match");
-            }
+                    if (!matcher.find()) {
+                        throw new Exception("regexp did not match");
+                    }
 
-            if (SpaceRuleSpaces.CapturingGroup0.equals(rule.getSpace())) {
-                return matcher.group(0);
-            } else {
-                if (matcher.groupCount() < 1) {
-                    throw new Exception("no capturing group 1");
-                }
-                return matcher.group(1);
+                    if (SpaceRuleSpaces.CapturingGroup0.equals(rule.getSpace())) {
+                        return matcher.group(0);
+                    } else {
+                        if (matcher.groupCount() < 1) {
+                            throw new Exception("no capturing group 1");
+                        }
+                        return matcher.group(1);
+                    }
+                }, 100, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                throw new Exception("failed to extract space key with regexp", e);
             }
         }
 
