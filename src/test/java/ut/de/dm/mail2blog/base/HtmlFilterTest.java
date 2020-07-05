@@ -112,7 +112,7 @@ public class HtmlFilterTest {
             .htmlFilterTables(false)
         .build());
 
-        assertEquals("<h1 style=\"background-color: #000;\">Hello &gt;World</h1> <p>This is a test.</p> Click Me", filter.sanitize(HTML_SAMPLE));
+        assertEquals("<h1 style=\"background-color:#000\">Hello &gt;World</h1> <p>This is a test.</p> Click Me", filter.sanitize(HTML_SAMPLE));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class HtmlFilterTest {
             .htmlFilterTables(true)
         .build());
 
-        assertEquals("Hello &gt;World This is a test. Click Me<table><tr><td></td></tr></table>", filter.sanitize(HTML_SAMPLE));
-        assertEquals(COMPLEX_HTML_TABLE_SAMPLE, filter.sanitize(COMPLEX_HTML_TABLE_SAMPLE));
+        assertEquals("Hello &gt;World This is a test. Click Me<table><tbody><tr><td></td></tr></tbody></table>", filter.sanitize(HTML_SAMPLE));
+        assertEquals(COMPLEX_HTML_TABLE_SAMPLE.replaceAll("\\s+", ""), filter.sanitize(COMPLEX_HTML_TABLE_SAMPLE).replaceAll("\\s+", ""));
     }
 }
