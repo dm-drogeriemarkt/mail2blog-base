@@ -79,6 +79,8 @@ public class MessageParserTest {
 
         assertEquals("Wrong mimeType for html part", "text/html", htmlPart.getContentType());
         assertTrue("Could not find <p>Lieber Bob,</p> in html", htmlPart.getHtml().contains("<p>Lieber Bob,</p>"));
+        assertTrue("Could not find <span\\n>Newline test</span> in html", htmlPart.getHtml().contains("<span\n>Newline test</span>"));
+
 
         assertEquals("Wrong content-id for attachment", "<6FA75120-9E1A-45DE-9001-620110B831AD>", attachment1.getContentID());
         assertEquals("Wrong mimeType for attachment", "image/gif", attachment1.getContentType());
@@ -186,5 +188,6 @@ public class MessageParserTest {
         MessageParser messageParser = new MessageParser(exampleMessage, mail2BlogBaseConfiguration);
         assertEquals("Failed to get user", "alice@example.org", messageParser.getSenderEmail());
     }
+
 }
 

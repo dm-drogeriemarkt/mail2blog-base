@@ -223,7 +223,7 @@ public class MessageParser {
             if (mimeType.equals("text/plain")) {
                 html += escapeHtml4(line) + "<br />";
             } else {
-                html += line;
+                html += line + "\n";
             }
         }
 
