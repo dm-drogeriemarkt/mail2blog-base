@@ -218,16 +218,18 @@ public class MessageParser {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(part.getInputStream(), charset));
         String line;
-        String html = "";
+        StringBuilder html = new StringBuilder();
         while ((line = reader.readLine()) != null) {
             if (mimeType.equals("text/plain")) {
-                html += escapeHtml4(line) + "<br />";
+                html.append(escapeHtml4(line));
+                html.append("<br />");
             } else {
-                html += line + "\n";
+                html.append(line);
             }
+            html.append("\n");
         }
 
-        result.setHtml(html);
+        result.setHtml(html.toString());
 
         return result;
     }

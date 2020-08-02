@@ -116,7 +116,7 @@ public class MessageParserTest {
         MailPartData textPart = content.get(0);
 
         assertEquals("Wrong mimeType for text part", "text/plain", textPart.getContentType());
-        assertTrue("Could not find - ALANA in text", textPart.getHtml().contains("- ALANA"));
+        assertTrue("Could not find - ALANA<br />\\n- alverde in text", textPart.getHtml().contains("- ALANA<br />\n- alverde"));
     }
 
     /**
