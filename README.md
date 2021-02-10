@@ -1,3 +1,6 @@
+:warning: | This repository is not being maintained anymore.
+:---: | :---
+
 This library is used by [Email to Confluence](https://github.com/dm-drogeriemarkt/Email-to-Confluence).
 All documentation and support takes place in that repo. This is not intended to be used on its own.
 Please open issues there.
